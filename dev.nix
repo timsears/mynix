@@ -8,14 +8,15 @@ with import <nixpkgs> {};
 let flatten = recurseIntoAttrs; # allows nested records to look like one flat record at install time.
     myEmacsPkgs = flatten (
     with emacs24Packages;
-    { inherit colorTheme magit haskellMode structuredHaskellMode  emacsw3m gitModes org2blog org ; }
+    #{ inherit colorTheme magit haskellMode structuredHaskellMode emacsw3m gitModes org2blog org ; }
+    { inherit magit org2blog org ; }
     );
-    utils = flatten ( { inherit ack curl wget gnumake;}
+    utils = flatten ( { inherit ack curl wget gnumake w3m;}
               //  {mygit = gitAndTools.gitFull; }
               );
     nixUtils = flatten { inherit nix-repl; };
     browsers = flatten { inherit chromium firefox; };
     editors = flatten { emacs = emacs24; };
-    other = flatten (with haskellPackages; { inherit hasktags hindent; });
+    otherHaskell = flatten (with haskellPackages; { inherit hasktags hindent; });
     haskell = flatten (with haskellPackages; { inherit ghc haskellPackages; });
-in flatten {inherit utils  nixUtils  browsers  editors  myEmacsPkgs other  haskell;}
+in flatten {inherit utils  nixUtils  browsers  editors  myEmacsPkgs otherHaskell  haskell;}
